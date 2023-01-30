@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use ZohoCrmSDK\Api\ZohoCrmApi;
+use ZohoCrmSDK\Models\OAuthClient;
 
 class FindContactByEmailMakeCommand extends Command
 {
@@ -33,16 +34,12 @@ class FindContactByEmailMakeCommand extends Command
             $record = $this->findByEmail($this->argument('email'));
             if (count($record) > 0) {
                 echo "User found. ID: ", $record[0]['id'];
-
                 return Command::SUCCESS;
             }
         } catch (\Exception $e) {
-            echo "No Contacts found with such email";
-
-            return Command::FAILURE;
+            echo $e;
+            echo PHP_EOL, "No Contacts found with such email";
         }
-        echo "Unknown error";
-
         return Command::FAILURE;
     }
 

@@ -29,7 +29,7 @@ return [
         'eu' => 'https://www.zohoapis.eu/crm/v2/',
         'in' => 'https://www.zohoapis.in/crm/v2/'
     ],
-    'current_host' => 'com',
+    'current_host' => 'eu',
     'command_after_hook' => null,
 
     /**
