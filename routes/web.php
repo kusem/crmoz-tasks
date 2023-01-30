@@ -1,9 +1,6 @@
 <?php
 
-use App\ModelsZoho\AccountZoho;
 use Illuminate\Support\Facades\Route;
-use ZohoCrmSDK\Api\ZohoCrmApi;
-use ZohoCrmSDK\ModelsZoho\AccountZohoModel;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +14,6 @@ use ZohoCrmSDK\ModelsZoho\AccountZohoModel;
 */
 
 
-Route::get('/lala', ['App\Http\Controllers\Controller', 'test']);
 Route::get('/', function () {
     return view('welcome');
 });

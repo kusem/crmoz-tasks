@@ -29,11 +29,22 @@ class AccontWithContactMakeCommand extends Command
     public function handle()
     {
 
-        $newAccountId =  $this->createNewAccount('Іван')['data'][0];
-        $newContactId =  $this->createNewContact('Дорн')['data'][0];
-        $bindContact = $this->bindAccountToContact($newAccountId, $newContactId);
+        $newAccount =  $this->createNewAccount('Іван');
+        $newContact =  $this->createNewContact('Дорн');
 
-        return Command::SUCCESS;
+        if($newAccount['status']===1 && $newContact['status']){
+            $bindContact = $this->bindAccountToContact($newAccount['data'][0], $newContact['data'][0])['status'];
+            echo 'New account created. ID: ' , $newAccount['data'][0] , PHP_EOL;
+            echo 'New contact created. ID: ' , $newContact['data'][0] , PHP_EOL;
+            if($bindContact === 1) {
+                echo 'Contact binded with account';
+                return Command::SUCCESS;
+            }
+            echo 'Contact not binded with account. Something went wrong.';
+            return Command::FAILURE;
+        }
+        print_r('Something went wrong. Sorry.');
+        return Command::FAILURE;
     }
 
     private function createNewAccount(string $name = 'Пан Василь' ) : array
