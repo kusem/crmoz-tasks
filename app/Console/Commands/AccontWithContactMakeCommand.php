@@ -28,75 +28,82 @@ class AccontWithContactMakeCommand extends Command
      */
     public function handle()
     {
+        $newAccount = $this->createNewAccount('Іван');
+        $newContact = $this->createNewContact('Дорн');
 
-        $newAccount =  $this->createNewAccount('Іван');
-        $newContact =  $this->createNewContact('Дорн');
-
-        if($newAccount['status']===1 && $newContact['status']){
+        if ($newAccount['status'] === 1 && $newContact['status']) {
             $bindContact = $this->bindAccountToContact($newAccount['data'][0], $newContact['data'][0])['status'];
-            echo 'New account created. ID: ' , $newAccount['data'][0] , PHP_EOL;
-            echo 'New contact created. ID: ' , $newContact['data'][0] , PHP_EOL;
-            if($bindContact === 1) {
+            echo 'New account created. ID: ', $newAccount['data'][0], PHP_EOL;
+            echo 'New contact created. ID: ', $newContact['data'][0], PHP_EOL;
+            if ($bindContact === 1) {
                 echo 'Contact binded with account';
+
                 return Command::SUCCESS;
             }
             echo 'Contact not binded with account. Something went wrong.';
+
             return Command::FAILURE;
         }
         print_r('Something went wrong. Sorry.');
+
         return Command::FAILURE;
     }
 
-    private function createNewAccount(string $name = 'Пан Василь' ) : array
+    private function createNewAccount(string $name = 'Пан Василь'): array
     {
         $data = [
-            'Account_Name' => $name
+            'Account_Name' => $name,
         ];
-        $newAccount =  ZohoCrmApi::getInstance()
+        $newAccount = ZohoCrmApi::getInstance()
             ->setModule('Accounts')
             ->records()
             ->insertRecords([$data])
             ->request();
+
         return [
-            'status'    =>  1,
-            'data'      =>  $newAccount
+            'status' => 1,
+            'data' => $newAccount,
         ];
     }
 
-    private function createNewContact(string $name = 'Пупкін' ) : array
+    private function createNewContact(string $name = 'Пупкін'): array
     {
         $data = [
-            'Last_Name' => $name
+            'Last_Name' => $name,
         ];
-        $newContact =  ZohoCrmApi::getInstance()
+        $newContact = ZohoCrmApi::getInstance()
             ->setModule('Contacts')
             ->records()
             ->insertRecords([$data])
             ->request();
+
         return [
-            'status'    =>  1,
-            'data'      =>  $newContact
+            'status' => 1,
+            'data' => $newContact,
         ];
     }
 
-private function bindAccountToContact(int $accID, int $contID) : array
+    private function bindAccountToContact(int $accID, int $contID): array
     {
         $updatedContact = ZohoCrmApi::getInstance()
-                ->setModule('Contacts')
-                ->records()
-                ->updateRecords([
+            ->setModule('Contacts')
+            ->records()
+            ->updateRecords(
+                [
                     [
                         'id' => $contID,
                         '$se_module' => 'Accounts',
                         'Account_Name' => [
-                            "id" => $accID
-                        ]
-                    ]
-                ])
-                ->request();
+                            "id" => $accID,
+                        ],
+                    ],
+                ]
+            )
+            ->request();
+
         return [
-            'status'    =>  1,
-            'data'      =>  $updatedContact
+            'status' => 1,
+            'data' => $updatedContact,
         ];
     }
 
